@@ -173,6 +173,19 @@ if pkg_installed flatpak; then
     flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo &
 
 fi
+
+#// swaync
+
+if pkg_installed swaync || pkg_installed swaynotificationcenter; then
+    style_css="${confDir}/swaync/style.css"
+
+    # convert themeSet to the format used in style.css
+    theme_file=$(echo "$gtkTheme" | tr '[:upper:]' '[:lower:]' | tr '-' '_')
+
+    # replaces the @import-Statement with the desired theme
+    sed -i "s|@import \"\.\/themes\/[^\"]*\.css\"|@import \"\.\/themes\/${theme_file}.css\"|g" "${style_css}"
+fi
+
 # // xsettingsd
 
 sed -i -e "/^Net\/ThemeName /c\Net\/ThemeName \"${gtkTheme}\"" \
